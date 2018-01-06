@@ -100,7 +100,7 @@ Seq::iterate([1, 1], function ($a, $b) {
     })
     ->take(10)
     ->toArray()
-// Result: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+// Result: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
 ```
 Creating a lazy sequence based on a generator function
 ```php
@@ -316,7 +316,7 @@ Fetching a lazy sequence of dynamic objects:
 ```php
 $users = 
     $database
-        ->query('select id, firstName, lastName from user where country=?',
+        ->query('select id, firstName, lastName from user where country=?')
         ->bind($country)
         ->limit(100)
         ->fetchSeqOfDynObjects();
@@ -525,14 +525,12 @@ $lineCount =
 		->forceAbsolute()
 		->scan('./src')
 		->flatMap(function ($file) {
-			return
-				FileReader::fromFile($file)
-					->readSeq();
-	})
-	->filter(function ($line) {
-		return trim($line) !== '';
-	})
-	->count();
+		    return FileReader::fromFile($file)->readSeq();
+	        })
+	        ->filter(function ($line) {
+		    return trim($line) !== '';
+	        })
+	        ->count();
 
 print "Number of non-blank PHP lines in directory 'src': $lineCount\n";
 ```
